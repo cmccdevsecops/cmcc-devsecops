@@ -152,7 +152,7 @@ abstract public class Connector implements Serializable {
     println(String.format("ERROR: %s %s", new Date(), text));
   }
 
-  def authorization() {
+  public authorization() {
     this.client.setRequestProperty("Authorization", "Basic " + 
         "dexterpeter.danao@ngc.com:8DmDLR0ad0PhSszeUka68B77".bytes.encodeBase64().toString());
     this.client.setRequestProperty("X-Atlassian-Token", "no-check");
