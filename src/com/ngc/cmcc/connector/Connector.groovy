@@ -9,7 +9,8 @@ package com.ngc.cmcc.connector;
 
 abstract public class Connector implements Serializable {
   // Define constants
-  static final JIRA_CLOUD = "https://cmcc-ngc.atlassian.net";
+  public static final JIRA_CLOUD = "https://cmcc-ngc.atlassian.net";
+
   static final JIRA_API1 = "/rest/api/2/issue/%s";
   static final JIRA_API2 = "/rest/api/2/issue/%s/%s";
   static final JIRA_PAYLOAD_DESCRIPTION = '{ "fields": {"description": "%s"} }';
@@ -18,9 +19,6 @@ abstract public class Connector implements Serializable {
   static final BOUNDARY = "*****";
 
   // Declare variables
-  private OutputStream outputStream;
-  private PrintWriter writer;
-
   def steps;
   def uri;
   def client;
@@ -44,19 +42,19 @@ abstract public class Connector implements Serializable {
     this.uri = URI.create(endpoint);
   }
 
-  public open(String issueId) {
+  public open(String issueId, username, password) {
     def api = String.format(JIRA_API1, issueId);
 
     this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
-    authorization();
+    authorization(username, password);
     this.client.setRequestProperty("Accept", "application/json");
   }
 
-  public open(String issueId, entity) {
+  public open(String issueId, entity, username, password) {
     def api = String.format(JIRA_API2, issueId, entity);
 
     this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
-    authorization();
+    authorization(username, password);
     this.client.setRequestProperty("Accept", "application/json");
   }
 
@@ -69,8 +67,8 @@ abstract public class Connector implements Serializable {
     this.client.setRequestProperty("Cache-Control", "no-cache");
     this.client.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
 
-    outputStream = this.client.getOutputStream();
-    writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET_ISO_8859), true);
+    OutputStream outputStream = this.client.getOutputStream();
+    PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET_ISO_8859), true);
 
     String fileName = file.getName();
     try {
@@ -96,6 +94,8 @@ abstract public class Connector implements Serializable {
       writer.flush();
     } catch(Exception e) {
       error(e.toString());
+    } finally {
+      close(writer);
     }
   }
 
@@ -112,6 +112,8 @@ abstract public class Connector implements Serializable {
       debug(this.client.responseCode);
     } catch (Exception e) {
       error(e.toString());
+    } finally {
+      this.client.disconnect();
     }
   }
 
@@ -120,9 +122,22 @@ abstract public class Connector implements Serializable {
     debug(this.client.responseCode);
   }
 
-  public void close() {
-    StringBuffer response = new StringBuffer();
+  public debug(text) {
+    println(String.format("DEBUG: %s %s", new Date(), text));
+  }
 
+  public error(text) {
+    println(String.format("ERROR: %s %s", new Date(), text));
+  }
+
+  public authorization(username, password) {
+    def credential = String.format("%s:%s", username, password);
+    this.client.setRequestProperty("Authorization", "Basic " + credential.bytes.encodeBase64().toString());
+    this.client.setRequestProperty("X-Atlassian-Token", "no-check");
+  }
+
+  private void close(PrintWriter writer) {
+    StringBuffer response = new StringBuffer();
     try {
       writer.append(LINE_FEED).flush();
       writer.append("--" + BOUNDARY + "--").append(LINE_FEED);
@@ -137,25 +152,11 @@ abstract public class Connector implements Serializable {
           response.append(line);
         }
         reader.close();
-        this.client.disconnect();
       }
     }catch(Exception e) {
       error(e.toString());
+    }finally {
+      this.client.disconnect();
     }
   }
-
-  public debug(text) {
-    println(String.format("DEBUG: %s %s", new Date(), text));
-  }
-
-  public error(text) {
-    println(String.format("ERROR: %s %s", new Date(), text));
-  }
-
-  public authorization() {
-    this.client.setRequestProperty("Authorization", "Basic " + 
-        "dexterpeter.danao@ngc.com:8DmDLR0ad0PhSszeUka68B77".bytes.encodeBase64().toString());
-    this.client.setRequestProperty("X-Atlassian-Token", "no-check");
-  }
-
 }

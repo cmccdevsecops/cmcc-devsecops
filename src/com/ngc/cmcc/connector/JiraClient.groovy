@@ -17,18 +17,19 @@ public class JiraClient {
   static void main(String[] args) {
     def issueId = "CNN-1";
     def entity = "attachments";
-    def text = "hello world 2"
+    def text = "SRF for security tools";
+    def username = "dexterpeter.danao@ngc.com";
+    def password = "8DmDLR0ad0PhSszeUka68B77"
 
     JiraConnector connector = new JiraConnector();
     // Get issue
-    connector.open(issueId);
-    println(connector.getIssue());
+    connector.open(issueId, username, password);
+    connector.getIssue();
     // Update description of an issue
-    connector.open(issueId);
+    connector.open(issueId, username, password);
     connector.updateDescription(text);
     // Add attachment to an issue
-    connector.open(issueId, entity);
+    connector.open(issueId, entity, username, password);
     connector.addAttachment("test-1.txt");
-    connector.close();
   }
  }
