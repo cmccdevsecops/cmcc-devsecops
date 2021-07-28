@@ -21,15 +21,15 @@ public class JiraClient {
     def username = "dexterpeter.danao@ngc.com";
     def password = "8DmDLR0ad0PhSszeUka68B77"
 
-    JiraConnector connector = new JiraConnector();
+    JiraConnector connector = new JiraConnector(issueId);
     // Get issue
-    connector.open(issueId, username, password);
+    connector.open(username, password);
     connector.getIssue();
     // Update description of an issue
-    connector.open(issueId, username, password);
+    connector.open(username, password);
     connector.updateDescription(text);
     // Add attachment to an issue
-    connector.open(issueId, entity, username, password);
+    connector.open(entity, username, password);
     connector.addAttachment("test-1.txt");
   }
  }

@@ -22,43 +22,42 @@ abstract public class Connector implements Serializable {
   def steps;
   def uri;
   def client;
+  def issueId;
 
-  public Connector() {
+  public Connector(issueId) {
     this.uri = URI.create(JIRA_CLOUD);
-  }
-
-  public Connector(steps) {
-    this.steps = steps;
-    Connector();
+    this.issueId = issueId;
   }
 
   /**
    * Constructor
    * @param steps Pipeline steps
    * @param endpoint Jira server endpoint
+   * @param issueId Jira issue Id
    */
-  public Connector(steps, endpoint) {
+  public Connector(steps, endpoint, issueId) {
     this.steps = steps;
     this.uri = URI.create(endpoint);
+    this.issueId = issueId;
   }
 
-  public open(String issueId, username, password) {
-    def api = String.format(JIRA_API1, issueId);
+  public open(username, password) {
+    def api = String.format(JIRA_API1, this.issueId);
 
     this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
     authorization(username, password);
     this.client.setRequestProperty("Accept", "application/json");
   }
 
-  public open(String issueId, entity, username, password) {
-    def api = String.format(JIRA_API2, issueId, entity);
+  public open(entity, username, password) {
+    def api = String.format(JIRA_API2, this.issueId, entity);
 
     this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
     authorization(username, password);
     this.client.setRequestProperty("Accept", "application/json");
   }
 
-  public void multipart(String name, File file) {
+  public void attach(String name, File file) {
     this.client.setRequestMethod("POST");
     this.client.setDoOutput(true);
     this.client.setDoInput(true);

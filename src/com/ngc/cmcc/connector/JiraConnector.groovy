@@ -15,16 +15,12 @@ import com.ngc.cmcc.connector.Connector;
 
 public class JiraConnector extends Connector {
 
-  public JiraConnector() {
-    super();
+  public JiraConnector(issueId) {
+    super(issueId);
   }
 
-  public JiraConnector(steps) {
-    super(steps);
-  }
-
-  public JiraConnector(steps, endpoint) {
-    super(steps, endpoint);
+  public JiraConnector(steps, endpoint, issueId) {
+    super(steps, endpoint, issueId);
   }
 
   /**
@@ -33,7 +29,7 @@ public class JiraConnector extends Connector {
    */
   public addAttachment(name) {
     File attachment = new File(name);
-    multipart("file", attachment);
+    attach("file", attachment);
   }
 
   /**
