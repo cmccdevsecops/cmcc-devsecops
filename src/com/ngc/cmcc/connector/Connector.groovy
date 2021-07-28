@@ -45,13 +45,17 @@ abstract public class Connector implements Serializable {
   }
 
   public open(String issueId) {
-    this.client = this.uri.resolve(this.uri.getPath() + api(issueId)).toURL().openConnection();
+    def api = String.format(JIRA_API1, issueId);
+
+    this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
     authorization();
     this.client.setRequestProperty("Accept", "application/json");
   }
 
   public open(String issueId, entity) {
-    this.client = this.uri.resolve(this.uri.getPath() + api(issueId, entity)).toURL().openConnection();
+    def api = String.format(JIRA_API2, issueId, entity);
+
+    this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
     authorization();
     this.client.setRequestProperty("Accept", "application/json");
   }
@@ -148,18 +152,10 @@ abstract public class Connector implements Serializable {
     println(String.format("ERROR: %s %s", new Date(), text));
   }
 
-  // Private
-  private authorization() {
+  def authorization() {
     this.client.setRequestProperty("Authorization", "Basic " + 
         "dexterpeter.danao@ngc.com:8DmDLR0ad0PhSszeUka68B77".bytes.encodeBase64().toString());
     this.client.setRequestProperty("X-Atlassian-Token", "no-check");
   }
 
-  private api(issueId) {
-    return String.format(JIRA_API1, issueId);
-  }
-
-  private api(issueId, entity) {
-    return String.format(JIRA_API2, issueId, entity);
-  }
 }
