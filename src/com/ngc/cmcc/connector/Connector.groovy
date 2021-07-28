@@ -136,7 +136,7 @@ abstract public class Connector implements Serializable {
     this.client.setRequestProperty("X-Atlassian-Token", "no-check");
   }
 
-  private void close(PrintWriter writer) {
+  public close(PrintWriter writer) {
     StringBuffer response = new StringBuffer();
     try {
       writer.append(LINE_FEED).flush();
