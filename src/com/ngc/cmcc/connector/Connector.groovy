@@ -92,7 +92,7 @@ abstract public class Connector implements Serializable {
       writer.append(LINE_FEED);
       writer.flush();
     } catch(Exception e) {
-      error(e.toString());
+      throw new Exception(e);
     } finally {
       close(writer);
     }
@@ -110,7 +110,7 @@ abstract public class Connector implements Serializable {
       out.close();
       debug(this.client.responseCode);
     } catch (Exception e) {
-      error(e.toString());
+      throw new Exception(e);
     } finally {
       this.client.disconnect();
     }
