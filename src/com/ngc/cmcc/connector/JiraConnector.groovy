@@ -27,7 +27,7 @@ public class JiraConnector extends Connector {
    * Adds attachment to an issue
    * @param name filename to attach
    */
-  public addAttachment(name) {
+  public addAttachment(name) throws Exception {
     File attachment = new File(name);
     attach("file", attachment);
   }
@@ -36,7 +36,7 @@ public class JiraConnector extends Connector {
    * Update issue description
     * @param description description of an issue
    */
-  public updateDescription(description) {
+  public updateDescription(description) throws Exception {
     def payload = String.format(JIRA_PAYLOAD_DESCRIPTION, description);
     update(payload);
   }
@@ -44,7 +44,7 @@ public class JiraConnector extends Connector {
   /**
    * Get issue
    */
-  public getIssue() {
+  public getIssue() throws Exception {
     read();
   }
 }
