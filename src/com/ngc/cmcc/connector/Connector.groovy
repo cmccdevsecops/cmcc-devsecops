@@ -108,7 +108,9 @@ abstract public class Connector implements Serializable {
       def out = new OutputStreamWriter(this.client.outputStream);
       out.write(payload);
       out.close();
-      debug(this.client.responseCode);
+      if(this.client.responseCode==401) {
+        throw new Exception(String.format("Unauthorized access to API resource, %s", payload));
+      }
     } catch (Exception e) {
       throw new Exception(e);
     } finally {
@@ -119,20 +121,6 @@ abstract public class Connector implements Serializable {
   public read() {
     this.client.setRequestMethod("GET");
     debug(this.client.responseCode);
-  }
-
-  public debug(text) {
-    println(String.format("DEBUG: %s %s", new Date(), text));
-  }
-
-  public error(text) {
-    println(String.format("ERROR: %s %s", new Date(), text));
-  }
-
-  public authorization(username, password) {
-    def credential = String.format("%s:%s", username, password);
-    this.client.setRequestProperty("Authorization", "Basic " + credential.bytes.encodeBase64().toString());
-    this.client.setRequestProperty("X-Atlassian-Token", "no-check");
   }
 
   public close(PrintWriter writer) {
@@ -153,9 +141,23 @@ abstract public class Connector implements Serializable {
         reader.close();
       }
     }catch(Exception e) {
-      error(e.toString());
+      throw new Exception(e);
     }finally {
       this.client.disconnect();
     }
+  }
+  
+  public debug(text) {
+    println(String.format("DEBUG: %s %s", new Date(), text));
+  }
+
+  public error(text) {
+    println(String.format("ERROR: %s %s", new Date(), text));
+  }
+
+  public authorization(username, password) {
+    def credential = String.format("%s:%s", username, password);
+    this.client.setRequestProperty("Authorization", "Basic " + credential.bytes.encodeBase64().toString());
+    this.client.setRequestProperty("X-Atlassian-Token", "no-check");
   }
 }
