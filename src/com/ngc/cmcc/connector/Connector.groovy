@@ -49,7 +49,7 @@ abstract public class Connector implements Serializable {
     this.client.setRequestProperty("Accept", "application/json");
   }
 
-  public open(entity, username, password) {
+  public open(username, password, entity) {
     def api = String.format(JIRA_API2, this.issueId, entity);
 
     this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();

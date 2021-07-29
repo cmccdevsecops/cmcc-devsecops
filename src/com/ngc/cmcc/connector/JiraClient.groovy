@@ -29,7 +29,7 @@ public class JiraClient {
     connector.open(username, password);
     connector.updateDescription(text);
     // Add attachment to an issue
-    connector.open(entity, username, password);
+    connector.open(username, password, entity);
     connector.addAttachment("test-1.txt");
   }
  }
