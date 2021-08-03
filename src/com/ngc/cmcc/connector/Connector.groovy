@@ -17,6 +17,7 @@ abstract public class Connector implements Serializable {
   static final LINE_FEED = "\r\n";
   static final CHARSET_ISO_8859 = "ISO-8859-1";
   static final BOUNDARY = "*****";
+  static final int EOFILE = new Integer(-1).intValue();
 
   // Declare variables
   def steps;
@@ -88,14 +89,10 @@ abstract public class Connector implements Serializable {
 
       FileInputStream inputStream = new FileInputStream(file);
       byte[] buffer = new byte[4096];
-      int bytesRead = inputStream.read(buffer);
-      do {
+      int bytesRead = -1;
+      while ((bytesRead = inputStream.read(buffer)) != EOFILE) {
         outputStream.write(buffer, 0, bytesRead);
-        bytesRead = inputStream.read(buffer);
-      } while(bytesRead!=-1)
-      // while ((bytesRead = inputStream.read(buffer)) != -1) {
-      //  outputStream.write(buffer, 0, bytesRead);
-      // }
+      }
       outputStream.flush();
       inputStream.close();
 
