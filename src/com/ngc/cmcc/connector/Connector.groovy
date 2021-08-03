@@ -43,18 +43,24 @@ abstract public class Connector implements Serializable {
 
   public open(username, password) {
     def api = String.format(JIRA_API1, this.issueId);
-
-    this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
-    authorization(username, password);
-    this.client.setRequestProperty("Accept", "application/json");
+    try {
+      this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
+      authorization(username, password);
+      this.client.setRequestProperty("Accept", "application/json");
+    }catch (Exception e) {
+      throw new Exception(e);
+    }
   }
 
   public open(username, password, entity) {
     def api = String.format(JIRA_API2, this.issueId, entity);
-
-    this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
-    authorization(username, password);
-    this.client.setRequestProperty("Accept", "application/json");
+    try {
+      this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
+      authorization(username, password);
+      this.client.setRequestProperty("Accept", "application/json");
+    }catch(Exception e) {
+      throw new Exception(e);
+    }
   }
 
   public void attach(String name, File file) {
