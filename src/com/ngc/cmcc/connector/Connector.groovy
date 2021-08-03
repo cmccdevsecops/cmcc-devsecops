@@ -89,7 +89,7 @@ abstract public class Connector implements Serializable {
       FileInputStream inputStream = new FileInputStream(file);
       byte[] buffer = new byte[4096];
       int bytesRead = -1;
-      while ((bytesRead = inputStream.read(buffer)) != -1) {
+      while ((bytesRead = inputStream.read(buffer))!=-1) {
         if(bytesRead==-1) {
           throw new Exception("CMCC Index out of bounds");
         }
