@@ -88,7 +88,7 @@ abstract public class Connector implements Serializable {
 
       FileInputStream inputStream = new FileInputStream(file);
       byte[] buffer = new byte[4096];
-      int bytesRead = -1;
+      def bytesRead = -1;
       while ((bytesRead = inputStream.read(buffer)) != -1) {
           outputStream.write(buffer, 0, bytesRead);
       }
@@ -97,8 +97,10 @@ abstract public class Connector implements Serializable {
 
       writer.append(LINE_FEED);
       writer.flush();
-    } catch(Exception e) {
-      throw new Exception(e);
+    } catch(IndexOutOfBoundsException xe) {
+      error(xe.toString());
+    } catch(Exception xe) {
+      throw new Exception(xe);
     } finally {
       close(writer);
     }
