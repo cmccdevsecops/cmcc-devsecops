@@ -98,7 +98,7 @@ abstract public class Connector implements Serializable {
       writer.append(LINE_FEED);
       writer.flush();
     } catch(IndexOutOfBoundsException xe) {
-      error(xe.toString());
+      throw new Exception(xe);
     } catch(Exception xe) {
       throw new Exception(xe);
     } finally {
