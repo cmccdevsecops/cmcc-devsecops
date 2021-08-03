@@ -88,10 +88,10 @@ abstract public class Connector implements Serializable {
 
       FileInputStream inputStream = new FileInputStream(file);
       byte[] buffer = new byte[4096];
-      int bytesRead = inputStream.read(buffer));
+      int bytesRead = inputStream.read(buffer);
       do {
         outputStream.write(buffer, 0, bytesRead);
-        bytesRead = inputStream.read(buffer));
+        bytesRead = inputStream.read(buffer);
       } while(bytesRead!=-1)
       // while ((bytesRead = inputStream.read(buffer)) != -1) {
       //  outputStream.write(buffer, 0, bytesRead);
