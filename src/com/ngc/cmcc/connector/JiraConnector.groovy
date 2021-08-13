@@ -12,15 +12,22 @@
 package com.ngc.cmcc.connector;
 
 import com.ngc.cmcc.connector.Connector;
+import com.ngc.cmcc.utility.JsonUtil;
 
 public class JiraConnector extends Connector {
 
+  def jsonUtil;
+
   public JiraConnector(issueId) {
     super(issueId);
+
+    jsonUtil = new JsonUtil();
   }
 
   public JiraConnector(steps, endpoint, issueId) {
     super(steps, endpoint, issueId);
+
+    jsonUtil = new JsonUtil();
   }
 
   /**
@@ -41,10 +48,18 @@ public class JiraConnector extends Connector {
     update(payload);
   }
 
+  public getDescription() throws Exception {
+    read();
+    def issueObect = jsonUtil.parse(this.client.inputStream.text);
+
+    return issueObject.fields.description;
+  }
   /**
    * Get issue
    */
   public getIssue() throws Exception {
     read();
+
+    return jsonUtil.parse(this.client.inputStream.text);
   }
 }

@@ -13,11 +13,12 @@ abstract public class Connector implements Serializable {
 
   static final JIRA_API1 = "/rest/api/2/issue/%s";
   static final JIRA_API2 = "/rest/api/2/issue/%s/%s";
+  static final JIRA_API3 = "/rest/api/2/issue/%s?fields=%s";
   static final JIRA_PAYLOAD_DESCRIPTION = '{ "fields": {"description": "%s"} }';
   static final LINE_FEED = "\r\n";
   static final CHARSET_ISO_8859 = "ISO-8859-1";
   static final BOUNDARY = "*****";
-  static final int EOFILE = -1;
+  static final EOFILE = -1;
 
   // Declare variables
   def steps;
@@ -47,9 +48,9 @@ abstract public class Connector implements Serializable {
     try {
       this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
       authorization(username, password);
-      this.client.setRequestProperty("Accept", "application/json");
-    }catch (Exception e) {
-      throw new Exception(e);
+      this.client.setRequestProperty("Accept", "application/json"); 
+    }catch (Exception xe) {
+      throw new Exception(xe);
     }
   }
 
@@ -59,8 +60,8 @@ abstract public class Connector implements Serializable {
       this.client = this.uri.resolve(this.uri.getPath() + api).toURL().openConnection();
       authorization(username, password);
       this.client.setRequestProperty("Accept", "application/json");
-    }catch(Exception e) {
-      throw new Exception(e);
+    }catch (Exception xe) {
+      throw new Exception(xe);
     }
   }
 
@@ -91,7 +92,8 @@ abstract public class Connector implements Serializable {
       byte[] buffer = new byte[4096];
       int bytesRead = -1;
       while ((bytesRead = inputStream.read(buffer)) != EOFILE) {
-        if(bytesRead==EOFILE){
+        // Handle index that is out of bounds
+        if(bytesRead == EOFILE) {
           break;
         }
         outputStream.write(buffer, 0, bytesRead);
@@ -101,8 +103,6 @@ abstract public class Connector implements Serializable {
 
       writer.append(LINE_FEED);
       writer.flush();
-    } catch(IndexOutOfBoundsException xe) {
-      throw new Exception(xe);
     } catch(Exception xe) {
       throw new Exception(xe);
     } finally {
@@ -123,8 +123,8 @@ abstract public class Connector implements Serializable {
       if(this.client.responseCode==401) {
         throw new Exception(String.format("Unauthorized access to API resource, %s", payload));
       }
-    } catch (Exception e) {
-      throw new Exception(e);
+    } catch (Exception xe) {
+      throw new Exception(xe);
     } finally {
       this.client.disconnect();
     }
