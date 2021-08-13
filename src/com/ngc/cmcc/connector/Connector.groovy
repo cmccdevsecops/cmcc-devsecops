@@ -111,7 +111,6 @@ abstract public class Connector implements Serializable {
   }
 
   public update(payload) {
-    debug(payload);
     this.client.setRequestProperty("Content-Type", "application/json");
     this.client.setRequestMethod("PUT");
     this.client.setDoOutput(true);
@@ -131,8 +130,17 @@ abstract public class Connector implements Serializable {
   }
 
   public read() {
-    this.client.setRequestMethod("GET");
-    debug(this.client.responseCode);
+    def responseText;
+    try {
+      this.client.setRequestMethod("GET");
+      responseText = this.client.inputStream.text;
+    }catch (Exception xe) {
+      throw new Exception(xe);
+    } finally {
+      this.client.disconnect();
+    }
+
+    return responseText;
   }
 
   public close(PrintWriter writer) {

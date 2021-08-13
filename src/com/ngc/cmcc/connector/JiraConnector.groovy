@@ -49,17 +49,17 @@ public class JiraConnector extends Connector {
   }
 
   public getDescription() throws Exception {
-    read();
-    def issueObject = jsonUtil.parse(this.client.inputStream.text);
-    
+    def responseText = read();
+    def issueObject = jsonUtil.parse(responseText);
+
     return issueObject.fields.description;
   }
   /**
    * Get issue
    */
   public getIssue() throws Exception {
-    read();
+    def responseText = read();
 
-    return jsonUtil.parse(this.client.inputStream.text);
+    return jsonUtil.parse(responseText);
   }
 }
