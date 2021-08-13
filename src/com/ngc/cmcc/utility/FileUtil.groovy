@@ -92,7 +92,7 @@ public class FileUtil {
   }
 
   public getList() {
-    def text = "----\\n";
+    def text = "\\n----\\n";
     manifestProperties.each {
       text = text + it.key + ": " +  it.value + "\\n ";
     }
