@@ -84,6 +84,19 @@ public class FileUtil {
   }
 
   public getKeys() {
-    manifestProperties.keySet();
+    return manifestProperties.keySet();
+  }
+
+  public getProperties() {
+    manifestProperties.toMapString();
+  }
+
+  public getList() {
+    def text = "";
+    manifestProperties.each {
+      text = text + it.key + ": " +  it.value + "\n";
+    }
+
+    return text;
   }
 }
