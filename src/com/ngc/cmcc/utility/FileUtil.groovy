@@ -92,11 +92,10 @@ public class FileUtil {
   }
 
   public getList() {
-    def text = "";
+    def text = "----\\n";
     manifestProperties.each {
-      text = text + it.key + ": " +  it.value + "\n";
+      text = text + it.key + ": " +  it.value + "\\n ";
     }
-
     return text;
   }
 }
