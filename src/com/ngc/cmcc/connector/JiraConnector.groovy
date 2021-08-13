@@ -52,7 +52,7 @@ public class JiraConnector extends Connector {
     def responseText = read();
     def issueObject = jsonUtil.parse(responseText);
 
-    return issueObject.fields.description;
+    return issueObject.fields.description.replaceAll("\n", "\\n");
   }
   /**
    * Get issue
