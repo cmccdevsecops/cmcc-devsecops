@@ -43,8 +43,9 @@ public class JiraConnector extends Connector {
    * Update issue description
     * @param description description of an issue
    */
-  public updateDescription(description) throws Exception {
-    def payload = String.format(JIRA_PAYLOAD_DESCRIPTION, description);
+  public updateDescription(text) throws Exception {
+    def description = getDescription();
+    def payload = String.format(JIRA_PAYLOAD_DESCRIPTION, description + "\n" + text);
     update(payload);
   }
 
